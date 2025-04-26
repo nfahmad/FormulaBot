@@ -71,5 +71,5 @@ async def team(ctx, team_name):
     retreive = short_team_name(team_name)
     await ctx.reply(scrape_info(retreive))
 
-bot.run(token)
+bot.run(TOKEN)
 
