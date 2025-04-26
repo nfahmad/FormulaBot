@@ -1,26 +1,26 @@
-import discord
+import os
+from os.path import join, dirname
 
+import requests
+import dotenv
+from bs4 import BeautifulSoup
+import discord
 from discord.ext import commands
 
 from database import short_team_name, short_driver_name_number
 
-import requests
-from typing import Mapping
-from bs4 import BeautifulSoup
+dotenv.load_dotenv(join(dirname(__file__), ".env"))
 
-from os.path import join, dirname
+TOKEN = os.environ.get('TOKEN', '')
 
-with open(join(dirname(__file__), "token.txt"), "r") as f:
-    token=f.read()
-
-def scrape_info(f1_url: str) -> Mapping[str, str]:
+def scrape_info(f1_url: str) -> str:
     if not f1_url.startswith('https://www.formula1.com/en/'):
-        return {}
+        return ""
 
     try:
         r = requests.get(f1_url, timeout=5)
     except requests.Timeout:
-        return {}
+        return ""
 
     soup = BeautifulSoup(r.content, 'html.parser')
 
@@ -72,5 +72,4 @@ async def team(ctx, team_name):
     await ctx.reply(scrape_info(retreive))
 
 bot.run(token)
-
 
